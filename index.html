@@ -52,47 +52,64 @@
 </head>
 <body>
   <h1>🧠 Mirror Intel – Daily News Briefing</h1>
-<select id="country-select">
-  <optgroup label="🌍 Africa">
-    <option value="za">🇿🇦 South Africa</option>
-    <option value="ng">🇳🇬 Nigeria</option>
-    <option value="ke">🇰🇪 Kenya</option>
-    <option value="eg">🇪🇬 Egypt</option>
-    <option value="gh">🇬🇭 Ghana</option>
-  </optgroup>
-  <optgroup label="🌎 North America">
-    <option value="us">🇺🇸 United States</option>
-    <option value="ca">🇨🇦 Canada</option>
-    <option value="mx">🇲🇽 Mexico</option>
-  </optgroup>
-  <optgroup label="🌏 Asia">
-    <option value="in">🇮🇳 India</option>
-    <option value="cn">🇨🇳 China</option>
-    <option value="jp">🇯🇵 Japan</option>
-    <option value="kr">🇰🇷 South Korea</option>
-  </optgroup>
-  <optgroup label="🌍 Europe">
-    <option value="gb">🇬🇧 United Kingdom</option>
-    <option value="de">🇩🇪 Germany</option>
-    <option value="fr">🇫🇷 France</option>
-    <option value="it">🇮🇹 Italy</option>
-    <option value="es">🇪🇸 Spain</option>
-  </optgroup>
-  <optgroup label="🌎 South America">
-    <option value="br">🇧🇷 Brazil</option>
-    <option value="ar">🇦🇷 Argentina</option>
-    <option value="co">🇨🇴 Colombia</option>
-  </optgroup>
-  <optgroup label="🌍 Oceania">
-    <option value="au">🇦🇺 Australia</option>
-    <option value="nz">🇳🇿 New Zealand</option>
-  </optgroup>
-</select>
+
+  <select id="country-select">
+    <optgroup label="🌍 Africa">
+      <option value="za">🇿🇦 South Africa</option>
+      <option value="ng">🇳🇬 Nigeria</option>
+      <option value="ke">🇰🇫 Kenya</option>
+      <option value="eg">🇪🇬 Egypt</option>
+      <option value="gh">🇬🇭 Ghana</option>
+    </optgroup>
+    <optgroup label="🌎 North America">
+      <option value="us">🇺🇸 United States</option>
+      <option value="ca">🇨🇦 Canada</option>
+      <option value="mx">🇲🇽 Mexico</option>
+    </optgroup>
+    <optgroup label="🌏 Asia">
+      <option value="in">🇮🇳 India</option>
+      <option value="cn">🇨🇳 China</option>
+      <option value="jp">🇯🇵 Japan</option>
+      <option value="kr">🇰🇷 South Korea</option>
+    </optgroup>
+    <optgroup label="🌍 Europe">
+      <option value="gb">🇬🇧 United Kingdom</option>
+      <option value="de">🇩🇪 Germany</option>
+      <option value="fr">🇫🇷 France</option>
+      <option value="it">🇮🇹 Italy</option>
+      <option value="es">🇪🇸 Spain</option>
+    </optgroup>
+    <optgroup label="🌎 South America">
+      <option value="br">🇧🇷 Brazil</option>
+      <option value="ar">🇦🇷 Argentina</option>
+      <option value="co">🇨🇴 Colombia</option>
+    </optgroup>
+    <optgroup label="🌍 Oceania">
+      <option value="au">🇦🇺 Australia</option>
+      <option value="nz">🇳🇿 New Zealand</option>
+    </optgroup>
+  </select>
+
+  <select id="topic-select">
+    <option value="general">🧠 All Topics</option>
+    <option value="health">🧬 Health</option>
+    <option value="technology">📱 Tech</option>
+    <option value="business">💼 Business</option>
+    <option value="politics">⚖️ Politics</option>
+    <option value="war">⚔️ Conflict & War</option>
+    <option value="environment">🌱 Environment</option>
+    <option value="education">📚 Education</option>
+    <option value="science">🔬 Science</option>
+    <option value="finance">💵 Finance</option>
+    <option value="innovation">💡 Innovation</option>
+    <option value="governance">🏛️ Governance</option>
+    <option value="ai">🧠 AI & Future</option>
+  </select>
 
   <button onclick="fetchNews()">Fetch Today’s Headlines</button>
   <div id="news-container"></div>
 
-  <button onclick="summarizeNews()">🧠 Generate Mirror Summary</button>
+  <button onclick="summarizeNews()">🔮 Mirror Summary</button>
   <button onclick="speakSummary()">🔊 Speak Briefing</button>
   <button onclick="saveToVisionFlow()">📥 Save to VisionFlow</button>
   <div id="mirror-summary"></div>
@@ -100,10 +117,9 @@
   <script>
     async function fetchNews() {
       const container = document.getElementById("news-container");
-      const selected = document.getElementById("country-select").value;
-      const url = selected
-        ? `/api/fetch-news?country=${selected}`
-        : `/api/fetch-news`;
+      const country = document.getElementById("country-select").value;
+      const topic = document.getElementById("topic-select").value;
+      const url = `/api/fetch-news?country=${country}&category=${topic}`;
 
       container.innerHTML = "<p>🧠 Scanning global feeds...</p>";
 
@@ -173,3 +189,4 @@
   </script>
 </body>
 </html>
+
