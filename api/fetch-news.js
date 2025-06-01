@@ -56,10 +56,10 @@ const RSS_FEEDS = {
 };
 
 export default async function handler(req, res) {
-  const { country = 'global', topic = '' } = req.query;
+  const { country = 'global', topic } = req.query;
 
   const feedsFromCountry = RSS_FEEDS[country] || [];
-  const feedsFromTopic = topic && topic !== 'general' && RSS_FEEDS[topic] ? RSS_FEEDS[topic] : [];
+  const feedsFromTopic = topic && RSS_FEEDS[topic] ? RSS_FEEDS[topic] : [];
 
   const feedsToUse = [...feedsFromCountry, ...feedsFromTopic];
   if (feedsToUse.length === 0) feedsToUse.push(...RSS_FEEDS.global);
@@ -69,7 +69,7 @@ export default async function handler(req, res) {
   try {
     for (const feed of feedsToUse) {
       const result = await parser.parseURL(feed);
-      allArticles.push(...result.items.slice(0, 2));
+      allArticles.push(...result.items.slice(0, 2)); // Limit for performance
     }
 
     const trimmed = allArticles.slice(0, 7).map(item => ({
