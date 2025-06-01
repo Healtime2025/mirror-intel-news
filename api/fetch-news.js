@@ -16,13 +16,14 @@ const RSS_FEEDS = {
     'https://rss.enca.com/rss/enca/top_stories',
     'https://www.news24.com/rss'
   ],
+  tech: [
+    'https://feeds.bbci.co.uk/news/technology/rss.xml',
+    'https://www.theverge.com/rss/index.xml',
+    'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml'
+  ],
   health: [
     'https://rss.nytimes.com/services/xml/rss/nyt/Health.xml',
     'https://www.medicalnewstoday.com/rss'
-  ],
-  tech: [
-    'https://feeds.bbci.co.uk/news/technology/rss.xml',
-    'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml'
   ],
   business: [
     'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml',
@@ -35,46 +36,38 @@ const RSS_FEEDS = {
   war: [
     'https://www.aljazeera.com/xml/rss/all.xml'
   ],
-  environment: [
-    'https://www.theguardian.com/environment/rss',
-    'https://rss.sciencedaily.com/earth_climate.xml'
-  ],
-  education: [
-    'https://rss.sciencedaily.com/education_learning.xml'
-  ],
   ai: [
     'https://www.technologyreview.com/feed/',
     'https://spectrum.ieee.org/rss/ai'
   ],
+  education: [
+    'https://www.timeshighereducation.com/news/rss',
+    'https://rss.sciencedaily.com/education_learning.xml'
+  ],
   governance: [
-    'https://www.un.org/rss',
-    'https://www.gov.uk/government/publications.atom'
+    'https://www.un.org/rss'
+  ],
+  environment: [
+    'https://www.theguardian.com/environment/rss',
+    'https://rss.sciencedaily.com/earth_climate.xml'
   ]
 };
 
 export default async function handler(req, res) {
+  const { country = 'global', topic = '' } = req.query;
+
+  const feedsFromCountry = RSS_FEEDS[country] || [];
+  const feedsFromTopic = topic && RSS_FEEDS[topic] ? RSS_FEEDS[topic] : [];
+
+  const feedsToUse = [...feedsFromCountry, ...feedsFromTopic];
+  if (feedsToUse.length === 0) feedsToUse.push(...RSS_FEEDS.global);
+
+  let allArticles = [];
+
   try {
-    const { country = 'global', topic = '' } = req.query;
-
-    console.log("🧭 Received query:", { country, topic });
-
-    const feedsFromCountry = RSS_FEEDS[country] || [];
-    const feedsFromTopic = topic && RSS_FEEDS[topic] ? RSS_FEEDS[topic] : [];
-
-    const feedsToUse = [...feedsFromCountry, ...feedsFromTopic];
-    if (feedsToUse.length === 0) {
-      return res.status(400).json({ error: "No feeds found for selected country or topic." });
-    }
-
-    let allArticles = [];
-
     for (const feed of feedsToUse) {
-      try {
-        const parsed = await parser.parseURL(feed);
-        allArticles.push(...parsed.items.slice(0, 2));
-      } catch (feedError) {
-        console.warn(`⚠️ Skipped broken feed: ${feed}`, feedError.message);
-      }
+      const result = await parser.parseURL(feed);
+      allArticles.push(...result.items.slice(0, 2));
     }
 
     const trimmed = allArticles.slice(0, 7).map(item => ({
@@ -83,9 +76,10 @@ export default async function handler(req, res) {
       description: item.contentSnippet || item.content || 'No summary.'
     }));
 
+    console.log("🧠 Mirror Intel RSS Response:", trimmed);
     res.status(200).json({ articles: trimmed });
   } catch (err) {
-    console.error("🛑 Global fetch error:", err.message);
-    res.status(500).json({ error: "Server failed to fetch feeds." });
+    console.error("🛑 RSS fetch failed:", err.message);
+    res.status(500).json({ error: `Server error: ${err.message}` });
   }
 }
