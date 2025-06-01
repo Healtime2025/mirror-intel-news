@@ -52,14 +52,43 @@
 </head>
 <body>
   <h1>🧠 Mirror Intel – Daily News Briefing</h1>
-  <select id="country-select">
-    <option value="">🌐 Global</option>
-    <option value="us">🇺🇸 United States</option>
+<select id="country-select">
+  <optgroup label="🌍 Africa">
     <option value="za">🇿🇦 South Africa</option>
-    <option value="gb">🇬🇧 United Kingdom</option>
     <option value="ng">🇳🇬 Nigeria</option>
+    <option value="ke">🇰🇪 Kenya</option>
+    <option value="eg">🇪🇬 Egypt</option>
+    <option value="gh">🇬🇭 Ghana</option>
+  </optgroup>
+  <optgroup label="🌎 North America">
+    <option value="us">🇺🇸 United States</option>
+    <option value="ca">🇨🇦 Canada</option>
+    <option value="mx">🇲🇽 Mexico</option>
+  </optgroup>
+  <optgroup label="🌏 Asia">
     <option value="in">🇮🇳 India</option>
-  </select>
+    <option value="cn">🇨🇳 China</option>
+    <option value="jp">🇯🇵 Japan</option>
+    <option value="kr">🇰🇷 South Korea</option>
+  </optgroup>
+  <optgroup label="🌍 Europe">
+    <option value="gb">🇬🇧 United Kingdom</option>
+    <option value="de">🇩🇪 Germany</option>
+    <option value="fr">🇫🇷 France</option>
+    <option value="it">🇮🇹 Italy</option>
+    <option value="es">🇪🇸 Spain</option>
+  </optgroup>
+  <optgroup label="🌎 South America">
+    <option value="br">🇧🇷 Brazil</option>
+    <option value="ar">🇦🇷 Argentina</option>
+    <option value="co">🇨🇴 Colombia</option>
+  </optgroup>
+  <optgroup label="🌍 Oceania">
+    <option value="au">🇦🇺 Australia</option>
+    <option value="nz">🇳🇿 New Zealand</option>
+  </optgroup>
+</select>
+
   <button onclick="fetchNews()">Fetch Today’s Headlines</button>
   <div id="news-container"></div>
 
