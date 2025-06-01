@@ -66,7 +66,7 @@
     <option value="global">🌐 Global</option>
   </select>
 
-  <select id="topic-select">
+<select id="topic-select">
     <option value="">🧠 All Topics</option>
     <option value="health">🧬 Health</option>
     <option value="tech">📱 Tech</option>
@@ -98,17 +98,7 @@
 
       try {
         const res = await fetch(url);
-
-let data;
-try {
-  data = await res.json();
-} catch (parseErr) {
-  console.error("⚠️ Mirror Intel JSON parse failed:", parseErr);
-  const text = await res.text();
-  console.error("🔍 Raw response text:", text);
-  container.innerHTML = "<p>❌ Server error occurred. Please try again later.</p>";
-  return;
-}
+        const data = await res.json();
 
         if (!data.articles || data.articles.length === 0) {
           container.innerHTML = "<p>No headlines found. Try again later.</p>";
@@ -170,4 +160,3 @@ try {
   </script>
 </body>
 </html>
-
