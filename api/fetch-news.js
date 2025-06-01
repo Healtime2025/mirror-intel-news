@@ -5,7 +5,6 @@ const RSS_FEEDS = {
   global: [
     'https://feeds.bbci.co.uk/news/world/rss.xml',
     'http://rss.cnn.com/rss/edition.rss',
-    'https://rss.dw.com/rdf/rss-en-all.xml',
     'https://www.aljazeera.com/xml/rss/all.xml'
   ],
   us: [
@@ -34,8 +33,7 @@ const RSS_FEEDS = {
     'https://feeds.bbci.co.uk/news/politics/rss.xml'
   ],
   war: [
-    'https://www.aljazeera.com/xml/rss/all.xml',
-    'https://rss.dw.com/rdf/rss-en-all.xml'
+    'https://www.aljazeera.com/xml/rss/all.xml'
   ],
   ai: [
     'https://www.technologyreview.com/feed/',
@@ -46,7 +44,6 @@ const RSS_FEEDS = {
     'https://rss.sciencedaily.com/education_learning.xml'
   ],
   governance: [
-    'https://www.gov.uk/government/publications.atom',
     'https://www.un.org/rss'
   ],
   environment: [
@@ -69,7 +66,7 @@ export default async function handler(req, res) {
   try {
     for (const feed of feedsToUse) {
       const result = await parser.parseURL(feed);
-      allArticles.push(...result.items.slice(0, 2)); // Limit for performance
+      allArticles.push(...result.items.slice(0, 2));
     }
 
     const trimmed = allArticles.slice(0, 7).map(item => ({
