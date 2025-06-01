@@ -13,7 +13,9 @@
       max-width: 800px;
       margin: auto;
     }
-    h1 { color: #1e2a78; }
+    h1 {
+      color: #1e2a78;
+    }
     button, select {
       padding: 10px 20px;
       font-size: 16px;
@@ -50,39 +52,18 @@
 </head>
 <body>
   <h1>🧠 Mirror Intel – Daily News Briefing</h1>
-
   <select id="country-select">
-    <optgroup label="🌍 Africa">
-      <option value="za">🇿🇦 South Africa</option>
-      <option value="ng">🇳🇬 Nigeria</option>
-    </optgroup>
-    <optgroup label="🌎 North America">
-      <option value="us">🇺🇸 United States</option>
-      <option value="ca">🇨🇦 Canada</option>
-    </optgroup>
-    <optgroup label="🌍 Europe">
-      <option value="gb">🇬🇧 United Kingdom</option>
-    </optgroup>
-    <option value="global">🌐 Global</option>
+    <option value="">🌐 Global</option>
+    <option value="us">🇺🇸 United States</option>
+    <option value="za">🇿🇦 South Africa</option>
+    <option value="gb">🇬🇧 United Kingdom</option>
+    <option value="ng">🇳🇬 Nigeria</option>
+    <option value="in">🇮🇳 India</option>
   </select>
-
-<select id="topic-select">
-    <option value="">🧠 All Topics</option>
-    <option value="health">🧬 Health</option>
-    <option value="tech">📱 Tech</option>
-    <option value="business">💼 Business</option>
-    <option value="politics">⚖️ Politics</option>
-    <option value="war">⚔️ Conflict & War</option>
-    <option value="environment">🌱 Environment</option>
-    <option value="education">📚 Education</option>
-    <option value="ai">🧠 AI & Future</option>
-    <option value="governance">🏛️ Governance</option>
-  </select>
-
   <button onclick="fetchNews()">Fetch Today’s Headlines</button>
   <div id="news-container"></div>
 
-  <button onclick="summarizeNews()">🔮 Mirror Summary</button>
+  <button onclick="summarizeNews()">🧠 Generate Mirror Summary</button>
   <button onclick="speakSummary()">🔊 Speak Briefing</button>
   <button onclick="saveToVisionFlow()">📥 Save to VisionFlow</button>
   <div id="mirror-summary"></div>
@@ -90,9 +71,10 @@
   <script>
     async function fetchNews() {
       const container = document.getElementById("news-container");
-      const country = document.getElementById("country-select").value;
-      const topic = document.getElementById("topic-select").value;
-      const url = `/api/fetch-news?country=${country}&topic=${topic}`;
+      const selected = document.getElementById("country-select").value;
+      const url = selected
+        ? `/api/fetch-news?country=${selected}`
+        : `/api/fetch-news`;
 
       container.innerHTML = "<p>🧠 Scanning global feeds...</p>";
 
@@ -106,6 +88,7 @@
         }
 
         container.innerHTML = "";
+
         data.articles.forEach((article, index) => {
           const div = document.createElement("div");
           div.className = "headline";
@@ -125,6 +108,7 @@
     function summarizeNews() {
       const articles = document.querySelectorAll(".headline");
       const summaryBox = document.getElementById("mirror-summary");
+
       if (articles.length === 0) {
         summaryBox.textContent = "⚠️ Please fetch headlines first.";
         return;
