@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mirror Intel – Live News Briefing</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+      color: #333;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      color: #1e2a78;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #1e2a78;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .headline {
+      background: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .headline a {
+      text-decoration: none;
+      color: #1e2a78;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 Mirror Intel – Daily News Briefing</h1>
+  <button onclick="fetchNews()">Fetch Today’s Headlines</button>
+  <div id="news-container"></div>
+
+  <script>
+    async function fetchNews() {
+      const apiKey = "1f59afb2e91949b2b63dcbe7ce834151";
+      const endpoint = `https://newsapi.org/v2/top-headlines?country=za&pageSize=5&apiKey=${apiKey}`;
+      const res = await fetch(endpoint);
+      const data = await res.json();
+      const container = document.getElementById("news-container");
+      container.innerHTML = "";
+
+      data.articles.forEach((article, index) => {
+        const div = document.createElement("div");
+        div.className = "headline";
+        div.innerHTML = `
+          <div><strong>#${index + 1}</strong></div>
+          <div><a href="${article.url}" target="_blank">${article.title}</a></div>
+          <div>${article.description || "No summary available."}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
