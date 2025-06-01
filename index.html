@@ -16,7 +16,7 @@
     h1 {
       color: #1e2a78;
     }
-    button {
+    button, select {
       padding: 10px 20px;
       font-size: 16px;
       background: #1e2a78;
@@ -25,6 +25,11 @@
       border-radius: 6px;
       cursor: pointer;
       margin-bottom: 20px;
+      margin-right: 10px;
+    }
+    select {
+      background: white;
+      color: #1e2a78;
     }
     .headline {
       background: white;
@@ -47,6 +52,14 @@
 </head>
 <body>
   <h1>🧠 Mirror Intel – Daily News Briefing</h1>
+  <select id="country-select">
+    <option value="">🌐 Global</option>
+    <option value="us">🇺🇸 United States</option>
+    <option value="za">🇿🇦 South Africa</option>
+    <option value="gb">🇬🇧 United Kingdom</option>
+    <option value="ng">🇳🇬 Nigeria</option>
+    <option value="in">🇮🇳 India</option>
+  </select>
   <button onclick="fetchNews()">Fetch Today’s Headlines</button>
   <div id="news-container"></div>
 
@@ -58,10 +71,15 @@
   <script>
     async function fetchNews() {
       const container = document.getElementById("news-container");
+      const selected = document.getElementById("country-select").value;
+      const url = selected
+        ? `/api/fetch-news?country=${selected}`
+        : `/api/fetch-news`;
+
       container.innerHTML = "<p>🧠 Scanning global feeds...</p>";
 
       try {
-        const res = await fetch("/api/fetch-news");
+        const res = await fetch(url);
         const data = await res.json();
 
         if (!data.articles || data.articles.length === 0) {
