@@ -1,24 +1,33 @@
+// /api/fetch-news.js – Mirror Intel via RSS Feeds
+import Parser from 'rss-parser';
+const parser = new Parser();
+
 export default async function handler(req, res) {
-  const apiKey = "1f59afb2e91949b2b63dcbe7ce834151";
+  const feeds = [
+    'https://feeds.bbci.co.uk/news/world/rss.xml',
+    'http://rss.cnn.com/rss/edition.rss',
+    'https://rss.dw.com/rdf/rss-en-all.xml',
+    'https://www.aljazeera.com/xml/rss/all.xml'
+  ];
 
-  // Get 'country' from query params
-  const { country } = req.query;
-
-  // Build dynamic URL
-  const base = "https://newsapi.org/v2/top-headlines";
-  const url = country
-    ? `${base}?country=${country}&pageSize=5&apiKey=${apiKey}`
-    : `${base}?pageSize=5&apiKey=${apiKey}`;
+  let allArticles = [];
 
   try {
-    const response = await fetch(url);
-    const data = await response.json();
+    for (const feed of feeds) {
+      const result = await parser.parseURL(feed);
+      allArticles.push(...result.items.slice(0, 2)); // 2 from each
+    }
 
-    console.log("🧠 Mirror Intel Raw News Response:", data);
+    const trimmed = allArticles.slice(0, 5).map((item, i) => ({
+      title: item.title,
+      url: item.link,
+      description: item.contentSnippet || item.content || 'No summary.'
+    }));
 
-    res.status(200).json({ articles: data.articles || [] });
-  } catch (error) {
-    console.error("Mirror Intel fetch failed:", error);
-    res.status(500).json({ error: "Failed to fetch news" });
+    console.log("🧠 Mirror Intel RSS Response:", trimmed);
+    res.status(200).json({ articles: trimmed });
+  } catch (err) {
+    console.error("🛑 RSS fetch failed:", err.message);
+    res.status(500).json({ error: 'Failed to fetch RSS feeds' });
   }
 }
