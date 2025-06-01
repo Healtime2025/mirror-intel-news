@@ -38,12 +38,22 @@
       color: #1e2a78;
       font-weight: bold;
     }
+    #mirror-summary {
+      margin-top: 20px;
+      font-style: italic;
+      white-space: pre-line;
+    }
   </style>
 </head>
 <body>
   <h1>🧠 Mirror Intel – Daily News Briefing</h1>
   <button onclick="fetchNews()">Fetch Today’s Headlines</button>
   <div id="news-container"></div>
+
+  <button onclick="summarizeNews()">🧠 Generate Mirror Summary</button>
+  <button onclick="speakSummary()">🔊 Speak Briefing</button>
+  <button onclick="saveToVisionFlow()">📥 Save to VisionFlow</button>
+  <div id="mirror-summary"></div>
 
   <script>
     async function fetchNews() {
@@ -75,6 +85,43 @@
         console.error("Mirror Intel Error:", error);
         container.innerHTML = "<p>⚠️ Unable to fetch news. Please check the connection or server logs.</p>";
       }
+    }
+
+    function summarizeNews() {
+      const articles = document.querySelectorAll(".headline");
+      const summaryBox = document.getElementById("mirror-summary");
+
+      if (articles.length === 0) {
+        summaryBox.textContent = "⚠️ Please fetch headlines first.";
+        return;
+      }
+
+      let content = "";
+      articles.forEach((a, i) => {
+        const title = a.querySelector("a").innerText;
+        const desc = a.querySelector("div:last-child").innerText;
+        content += `${i + 1}. ${title} - ${desc}\n`;
+      });
+
+      const basicSummary = `Mirror Summary:\n\n${content.split("\n").slice(0, 3).join("\n")}`;
+      summaryBox.textContent = basicSummary;
+    }
+
+    function speakSummary() {
+      const summary = document.getElementById("mirror-summary").innerText;
+      if (!summary) return;
+      const utterance = new SpeechSynthesisUtterance(summary);
+      speechSynthesis.speak(utterance);
+    }
+
+    function saveToVisionFlow() {
+      const summary = document.getElementById("mirror-summary").innerText;
+      if (!summary) {
+        alert("Nothing to save. Generate summary first.");
+        return;
+      }
+      console.log("🗂 Summary saved to VisionFlow:", summary);
+      alert("🧠 Summary saved to VisionFlow (simulated). Future: Connect to backend vault.");
     }
   </script>
 </body>
